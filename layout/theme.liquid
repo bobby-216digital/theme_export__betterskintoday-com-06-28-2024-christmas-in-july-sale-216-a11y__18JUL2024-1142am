@@ -273,6 +273,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   })();
 </script>
 <!-- end Drip -->
+<script>
+  setTimeout(()=>{
+      let a11yImage = document.querySelectorAll(".grid__image-contain");
+  let a11yContent = document.querySelector(".easytabs-contents");
+  let a11yHolder = document.querySelector(".easytabs-content-holder");
+  let a11yAnnounce = document.querySelector(".announcement-slider__slide");
+  
+    for(let i = 0; i < a11yImage.length; i++){
+      a11yImage[i].setAttribute("alt", "");
+    }
+    if(a11yContent){
+        a11yContent.removeAttribute("role");
+      }
+    if(a11yHolder){
+      a11yHolder.removeAttribute("role");
+      a11yHolder.removeAttribute("aria-expanded");
+      }
+  if(a11yAnnounce){
+    a11yAnnounce.removeAttribute("aria-hidden");
+  }
+  }, 1000)
 
+</script>
 </body>
 </html>

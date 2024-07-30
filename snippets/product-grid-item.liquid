@@ -81,7 +81,7 @@ Arguments
     -%}
 
     <div class="grid__item-image-wrapper">
-      <a href="{{ product.url | within: collection }}" class="grid-product__link">
+      <a aria-label="{{ product.title }}" href="{{ product.url | within: collection }}" class="grid-product__link">
         <div class="grid-product__image-mask">
           {%- if fixed_aspect_ratio -%}
             <div
