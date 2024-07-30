@@ -1,0 +1,45 @@
+     <div id="footerFormContainer_216464"></div>
+     <script>
+       let footerFormContainer_216464 = () => {
+            const footerFormScript = document.createElement('script');
+            footerFormScript.setAttribute("src", "https://forms-akamai.smsbump.com/374983/form_216464.js?ver=1715866069");
+            footerFormScript.setAttribute("type", "text/javascript");
+             console.log('loaded')
+            const head = document.head || document.getElementsByTagName('head')[0]
+            head.appendChild(footerFormScript)
+
+            footerFormScript.onload = function () {
+              SMSBumpForm.default.render()
+            }
+       }
+
+       footerFormContainer_216464()
+
+       document.addEventListener("shopify:section:load", function(event) {
+         footerFormContainer_216464()
+       });
+       document.addEventListener("shopify:section:select", function(event) {
+         footerFormContainer_216464()
+       });
+     </script>
+     {% schema %}
+     {
+       "name": "SMSBump Collection Footer",
+       "settings": [
+         {
+           "type" : "paragraph",
+           "content" : "To edit your Collection Footer, go to [SMSBump](https://smsbump.yotpo.com/sms/) and open your Footer Form. Save your updated form and refresh this page."
+         }
+       ],
+       "presets": [
+         {
+           "name": "SMSBump Collection Footer",
+           "category": "Subscription Footer Forms"
+         }
+       ]
+     }
+     {% endschema %}
+     {% stylesheet %}
+     {% endstylesheet %}
+     {% javascript %}
+     {% endjavascript %}

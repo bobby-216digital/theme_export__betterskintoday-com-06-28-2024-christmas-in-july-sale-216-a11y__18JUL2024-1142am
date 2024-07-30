@@ -1,0 +1,21 @@
+/*********************** Custom CSS for Boost AI Search & Discovery  ************************/
+.boost-sd__suggestion-queries-item-amount--sale{
+  flex-direction: row-reverse;
+}
+
+.boost-sd__suggestion-queries-item-badge--sale{
+  background-color: black;
+}
+
+.boost-sd__suggestion-queries-item-price{
+  font-size: 12px;
+}
+
+.boost-sd__format-currency--price-sale{
+  color: black;
+  gap: 3px;
+}
+
+.boost-sd__save--price{
+  color: rgb(194, 0, 0);
+}

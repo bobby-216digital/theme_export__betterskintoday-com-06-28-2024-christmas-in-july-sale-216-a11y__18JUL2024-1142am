@@ -1,0 +1,472 @@
+{%- comment -%}
+{
+  "pack_name": "Text - expandable",
+  "pack_author": "Design Packs"
+}
+{%- endcomment -%}
+
+{% comment %} Security Code - hides section when app uninstalled {% endcomment %}
+{%- unless content_for_header contains 'design_packs_file.js' -%}
+  {%- if request.design_mode -%}
+    <div class="dsgn-pck__no-app-warning">
+      <div class="dsgn-pck__no-app-warning-background">
+      </div>
+      <div class="dsgn-pck__no-app-warning-text dsgn-pck__rte">
+        <p><strong>WARNING!</strong> This premium section will not display properly without an active subscription for <a href="https://apps.shopify.com/design-packs" target="_blank" rel="nofollow">Design Packs</a>. If you need any support please email <a href="mailto:info@design-packs.com" target="_blank">info@design-packs.com</a> with your questions.</p>
+      </div>
+    </div>
+  {%- endif -%}
+  {%- break -%}
+{%- endunless -%}
+
+{%- comment -%} Text: custom font_picker values {%- endcomment -%}
+{%- capture font_settings_list -%}
+{{ section.settings.heading_font | font_face: font_display: 'swap' }}~
+{{ section.settings.heading_font | font_modify: 'weight', 'bolder' | font_face: font_display: 'swap' }}~
+{{ section.settings.heading_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}~
+{{ section.settings.heading_font | font_modify: 'style', 'italic' | font_modify: 'weight', 'bolder' | font_face: font_display: 'swap' }}
+{{ section.settings.main_font | font_face: font_display: 'swap' }}~
+{{ section.settings.main_font | font_modify: 'weight', 'bolder' | font_face: font_display: 'swap' }}~
+{{ section.settings.main_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}~
+{{ section.settings.main_font | font_modify: 'style', 'italic' | font_modify: 'weight', 'bolder' | font_face: font_display: 'swap' }}
+{%- endcapture -%}
+{%- assign font_array = font_settings_list | split: '~' -%}
+
+{%- comment -%} Layout: has user entered measurement value into max-width field? {%- endcomment -%}
+{%- if section.settings.max_width contains 'px' or section.settings.max_width contains '%' -%}
+  {%- assign max_width = section.settings.max_width -%}
+{%- else -%}
+  {%- assign max_width = section.settings.max_width | append: 'px' -%}
+{%- endif -%}
+
+{%- capture minify -%}
+{%- comment -%} CSS {%- endcomment -%}
+<style>
+{%- if section.settings.override_theme_font != blank -%}
+  {%- for font in font_array -%}
+    {%- unless font contains 'error' -%}{{ font }}{%- endunless -%}
+  {%- endfor -%}
+  {%- capture heading_font -%}{{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }}{%- endcapture -%}
+  #DP--{{ section.id }} {
+    --main-font: {{ section.settings.main_font.family }}, {{ section.settings.main_font.fallback_families }};
+    --main-font-weight: {{ section.settings.main_font.weight }};
+    --main-font-style: {{ section.settings.main_font.style }};
+  }
+{%- endif -%}
+
+#DP--{{ section.id }} {
+  background: {{ section.settings.background_color }};
+  margin-top: {{ section.settings.outer_margin }}px;
+  margin-bottom: {{ section.settings.outer_margin }}px;
+}
+
+#DP--{{ section.id }} .dsgn-pck__sizer {
+  padding-top: {{ section.settings.inner_padding }}px;
+  padding-bottom: {{ section.settings.inner_padding }}px;
+  width: {{ section.settings.base_width }}%;
+  max-width: {{ max_width }};
+}
+
+#DP--{{ section.id }} .dsgn-pck__info {
+  display: flex;
+  flex-wrap: nowrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#DP--{{ section.id }} .dsgn-pck__heading {
+  text-decoration: none;
+  transition: 0.2s;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 0;
+  line-height: calc(3px + 2.2ex + 3px);
+  color: {{ section.settings.text_color }};
+  font-size: calc(var(--dp-g-small-heading-size, var(--dp-small-heading-size, 24px)) * {{ section.settings.text_size | times: 0.01 }});
+  {%- if section.settings.override_theme_font != blank -%}
+    font-family: var(--heading-font);
+    font-weight: var(--heading-font-weight);
+    font-style: var(--heading-font-style);
+  {%- endif -%}
+}
+
+#DP--{{ section.id }} .dsgn-pck__heading:hover {
+  color: {{ section.settings.highlight_color }};
+}
+
+#DP--{{ section.id }} .dsgn-pck__heading svg path {
+  fill: {{ section.settings.text_color }};
+  transition: 0.2s;
+}
+
+#DP--{{ section.id }} .dsgn-pck__heading:hover svg path {
+  fill: {{ section.settings.highlight_color }};
+}
+
+#DP--{{ section.id }} .dsgn-pck__icon {
+  width: calc(var(--dp-g-small-heading-size, var(--dp-small-heading-size, 24px)) * {{ section.settings.text_size | times: 0.01 }});
+  height: calc(var(--dp-g-small-heading-size, var(--dp-small-heading-size, 24px)) * {{ section.settings.text_size | times: 0.01 }});
+  display: block;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+#DP--{{ section.id }} .dsgn-pck__icon svg {
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  position: absolute;
+}
+
+#DP--{{ section.id }} .dsgn-pck__text {
+  line-height: calc(3px + 2.5ex + 3px);
+  color: {{ section.settings.text_color }};
+  margin-top: 10px;
+  font-size: calc(var(--dp-g-body-size, var(--dp-body-size, 18px)) * {{ section.settings.text_size | times: 0.01 }});
+  {%- if section.settings.override_theme_font != blank -%}
+  font-family: var(--main-font);
+  font-weight: var(--main-font-weight);
+  font-style: var(--main-font-style);
+  {%- endif -%}
+}
+
+#DP--{{ section.id }} details > summary {
+  list-style: none;
+}
+
+#DP--{{ section.id }} details > summary::-webkit-details-marker {
+  display: none;
+}
+
+{%- if section.settings.custom_css != blank -%}
+  {%- assign custom_section_declarations = section.settings.custom_css | split: '}' -%}
+  {%- for declaration in custom_section_declarations -%}
+    {%- if declaration contains '{' -%}
+      #DP--{{ section.id }} {{ declaration }} }
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+/* Landscape phones and down */
+@media (max-width: 480px) {
+
+  #DP--{{ section.id }} {
+    margin-top: {{ section.settings.outer_margin | divided_by: 2 }}px;
+    margin-bottom: {{ section.settings.outer_margin | divided_by: 2 }}px;
+  }
+
+  #DP--{{ section.id }} .dsgn-pck__sizer {
+    min-width: 70%;
+    padding-top: {{ section.settings.inner_padding | divided_by: 2 }}px;
+    padding-bottom: {{ section.settings.inner_padding | divided_by: 2 }}px;
+  }
+
+  #DP--{{ section.id }} .dsgn-pck__summary {
+    line-height: calc(3px + 1ex + 3px);
+    font-size: calc(var(--dp-g-small-heading-size, var(--dp-small-heading-size, 24px)) * {{ section.settings.text_size | times: 0.01 }});
+  }
+
+  #DP--{{ section.id }} .dsgn-pck__details {
+    line-height: calc(3px + 2ex + 3px);
+    font-size: calc(var(--dp-g-body-size, var(--dp-body-size, 18px)) * {{ section.settings.text_size | times: 0.01 }});
+  }
+
+  {%- if section.settings.mobile_custom_css != blank -%}
+    {%- assign mobile_custom_declarations = section.settings.mobile_custom_css | split: '}' -%}
+    {%- for declaration in mobile_custom_declarations -%}
+      {%- if declaration contains '{' -%}
+        #DP--{{ section.id }} {{ declaration }} }
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+}
+</style>
+
+{%- comment -%} HTML {%- endcomment -%}
+<section id="DP--{{ section.id }}" class="DP--{{ section.id }} dsgn-pck__section dsgn-pck__text-expandable">
+  <div class="dsgn-pck__sizer">
+    <div class="dsgn-pck__justify-{{ section.settings.text_alignment }}">
+      <details class="dsgn-pck__details">
+        <summary class="dsgn-pck__summary">
+          <h3 class="dsgn-pck__heading dsgn-pck__justify-{{ section.settings.text_alignment }}">
+            {%- capture icon -%}
+              {%- case section.settings.icon -%}
+                {%- when 'information' -%}
+                  <svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 20c5.514 0 10-4.486 10-10s-4.486-10-10-10-10 4.486-10 10 4.486 10 10 10zm1-6a1 1 0 1 1-2 0v-4a1 1 0 1 1 2 0v4zm-1-9a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"></path></svg>
+                {%- when 'plus' -%}
+                  <svg viewBox="0 0 20 20"><path d="M0 10c0 5.514 4.486 10 10 10s10-4.486 10-10-4.486-10-10-10-10 4.486-10 10zm5 0a1 1 0 0 1 1-1h3v-3a1 1 0 1 1 2 0v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3h-3a1 1 0 0 1-1-1z"></path></svg>
+                {%- when 'question' -%}
+                  <svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M0 10c0-5.522 4.478-10 10-10 5.523 0 10 4.478 10 10 0 5.523-4.477 10-10 10-5.522 0-10-4.477-10-10zm11.125 2.002h-2.136v-.141c.01-1.966.492-2.254 1.374-2.782.093-.056.19-.114.293-.178.73-.459 1.292-1.038 1.292-1.883 0-.948-.743-1.564-1.666-1.564-.851 0-1.657.398-1.712 1.533h-2.266c.06-2.294 1.876-3.487 3.99-3.487 2.306 0 3.894 1.447 3.894 3.488 0 1.382-.695 2.288-1.805 2.952l-.238.144c-.79.475-1.009.607-1.02 1.777v.139zm.17 3.012a1.344 1.344 0 0 1-1.327 1.328 1.32 1.32 0 0 1-1.328-1.328 1.318 1.318 0 0 1 1.328-1.316c.712 0 1.322.592 1.328 1.316z"></path></svg>
+                {%- when 'truck' -%}
+                  <svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M1.5 2a1.5 1.5 0 0 0-1.5 1.5v11a1.5 1.5 0 0 0 1.5 1.5h.5a3 3 0 1 0 6 0h4a3 3 0 1 0 6 0h.5a1.5 1.5 0 0 0 1.5-1.5v-3.361a1.5 1.5 0 0 0-.214-.772l-2.783-4.639a1.5 1.5 0 0 0-1.286-.728h-2.717v-1.5a1.5 1.5 0 0 0-1.5-1.5h-10zm13.5 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-11-1a1 1 0 1 0 2 0 1 1 0 0 0-2 0zm13.234-6h-4.234v-3h2.434l1.8 3z"></path></svg>
+                {%- when 'shield' -%}
+                  <svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.128.233c-2.37 1.383-5.37 2.33-7.635 2.646-.821.115-1.495.79-1.493 1.62l.001.497c-.03 6.043.477 11.332 9.462 14.903a1.45 1.45 0 0 0 1.062 0c8.993-3.571 9.503-8.86 9.473-14.903v-.501c-.001-.828-.674-1.51-1.492-1.638-2.148-.337-5.281-1.274-7.65-2.628a1.733 1.733 0 0 0-1.728.004zm4.577 8.478a1 1 0 0 0-1.414-1.415l-3.293 3.294-1.293-1.293a1 1 0 1 0-1.415 1.413l2 2.001a1 1 0 0 0 1.414 0l4-4.001z"></path></svg>
+                {%- when 'risk' -%}
+                  <svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="m1.16 16.829 7.498-15c.553-1.106 2.13-1.106 2.683 0l7.498 15a1.5 1.5 0 0 1-1.341 2.171h-14.996a1.5 1.5 0 0 1-1.342-2.171zm8.84-9.829a1 1 0 0 1 1 1v3a1 1 0 0 1-2 0v-3a1 1 0 0 1 1-1zm1 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path></svg>
+                {%- when 'notification' -%}
+                  <svg viewBox="0 0 20 20"><path d="M10 0a1 1 0 0 1 1 1v2.032l-.001.021-.002.03a6.002 6.002 0 0 1 5.003 5.917c0 3.093.625 4.312 1.599 6.21l.034.068c.17.33-.07.722-.442.722h-14.382a.496.496 0 0 1-.442-.722l.034-.068c.974-1.898 1.599-3.117 1.599-6.21a6.002 6.002 0 0 1 5.003-5.918l-.002-.04a.835.835 0 0 1-.001-.042v-2a1 1 0 0 1 1-1zm2 18a2 2 0 0 1-4 0h4z"></path></svg>
+                {%- when 'marketing' -%}
+                  <svg viewBox="0 0 20 20"><path d="M17.1 14.95c.412.16.9-.08.9-.45v-13c0-.37-.488-.61-.9-.45-.683.41-1.311.83-1.919 1.237-2.14 1.43-4.019 2.687-7.084 2.713h-4.097c-1.66 0-3 1.34-3 3s1.34 3 3 3h4c3.123 0 5.02 1.268 7.182 2.714.607.406 1.236.826 1.918 1.236zm-8.1 3.05h-.79c-.43 0-.81-.27-.94-.67l-2.2-4.33h3.93a1 1 0 0 1 1 1v3c0 .55-.45 1-1 1z"></path></svg>
+                {%- when 'hint' -%}
+                  <svg viewBox="0 0 20 20"><path d="M10 0a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1zm2 17v1.5a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5v-1.5h4zm6-8a1 1 0 1 0 0 2h1a1 1 0 1 0 0-2h-1zm-18 1a1 1 0 0 1 1-1h1a1 1 0 1 1 0 2h-1a1 1 0 0 1-1-1zm4.343-7.071a1 1 0 0 0-1.413 1.414l.707.707a1 1 0 1 0 1.413-1.414l-.707-.707zm10.607 2.121a1 1 0 0 1 0-1.414l.707-.707a1 1 0 1 1 1.414 1.414l-.707.707a1 1 0 0 1-1.414 0zm-1.682 6.257c-.618.874-1.268 1.817-1.268 2.888v.805h-4v-.805c0-1.07-.65-2.014-1.268-2.888a4 4 0 1 1 6.536 0z"></path></svg>
+                {%- when 'flag' -%}
+                  <svg viewBox="0 0 20 20"><path d="M3.249 2.001h13.868a.5.5 0 0 1 .428.758l-2.545 4.241 3.35 4.188a.5.5 0 0 1-.39.812l-12.49.001 1.507 6.782a1 1 0 1 1-1.953.434l-4-18a1 1 0 0 1 1.953-.434l.272 1.218z"></path></svg>
+                {%- when 'customer' -%}
+                  <svg viewBox="0 0 20 20"><path d="M14.363 5.22a4.22 4.22 0 1 1-8.439 0 4.22 4.22 0 0 1 8.439 0zm-11.693 9.249c1.385-1.09 4.141-2.853 7.474-2.853 3.332 0 6.089 1.764 7.474 2.853.618.486.81 1.308.567 2.056l-.333 1.02a2.11 2.11 0 0 1-2.006 1.455h-11.405a2.11 2.11 0 0 1-2.005-1.455l-.333-1.02c-.245-.748-.052-1.57.567-2.056z"></path></svg>
+                {%- when 'alert' -%}
+                  <svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 0c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zm-1 6a1 1 0 1 1 2 0v4a1 1 0 1 1-2 0v-4zm1 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path></svg>
+                {%- when 'custom' -%}
+                  {{ section.settings.icon_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+                {%- else -%}
+
+              {%- endcase -%}
+            {%- endcapture -%}
+            {% if icon != blank and section.settings.icon_alignment == 'left' %}
+              <span class="dsgn-pck__icon">{{ icon }}</span>
+            {% endif %}
+            <span class="dsgn-pck__title">{{ section.settings.title }}</span>
+            {% if icon != blank and section.settings.icon_alignment == 'right' %}
+              <span class="dsgn-pck__icon">{{ icon }}</span>
+            {% endif %}
+          </h3>
+        </summary>
+        <div class="dsgn-pck__text dsgn-pck__rte">
+          {{ section.settings.description }}
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+{%- endcapture -%}
+{{ minify | strip_newlines }}
+
+{% schema %}
+{
+  "name": "Text - expandable",
+  "class": "DP__text-expandable",
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        {
+          "value": "none",
+          "label": "No icon"
+        },
+        {
+          "value": "question",
+          "label": "Question"
+        },
+        {
+          "value": "plus",
+          "label": "Plus"
+        },
+        {
+          "value": "information",
+          "label": "Information"
+        },
+        {
+          "value": "truck",
+          "label": "Truck"
+        },
+        {
+          "value": "shield",
+          "label": "Shield"
+        },
+        {
+          "value": "risk",
+          "label": "Risk"
+        },
+        {
+          "value": "notification",
+          "label": "Notification"
+        },
+        {
+          "value": "marketing",
+          "label": "Marketing"
+        },
+        {
+          "value": "hint",
+          "label": "Hint"
+        },
+        {
+          "value": "flag",
+          "label": "Flag"
+        },
+        {
+          "value": "customer",
+          "label": "Customer"
+        },
+        {
+          "value": "alert",
+          "label": "Alert"
+        }
+      ],
+      "default": "information"
+    },
+    {
+      "type": "select",
+      "id": "icon_alignment",
+      "label": "Icon alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "More Info"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Expanded text",
+      "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nibh enim, ornare at consequat sed, placerat quis libero. Curabitur id nulla ut nunc aliquam sodales.</p>"
+    },
+    {
+      "type": "header",
+      "content": "✏️ Text appearance"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 60,
+      "max": 120,
+      "default": 100,
+      "unit": "%"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "🎨 Design"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Text hover",
+      "default": "#676767"
+    },
+    {
+      "type": "color_background",
+      "id": "background_color",
+      "label": "Background"
+    },
+    {
+      "type": "header",
+      "content": "🖼 Layout"
+    },
+    {
+      "type": "range",
+      "id": "base_width",
+      "label": "Size",
+      "min": 60,
+      "max": 90,
+      "step": 5,
+      "default": 80,
+      "unit": "%"
+    },
+    {
+      "type": "text",
+      "id": "max_width",
+      "label": "Maximum width",
+      "placeholder": "eg. 1200px",
+      "info": "Sets width constraint. Prevents inner content from moving too far to the edge on large screens."
+    },
+    {
+      "type": "range",
+      "id": "inner_padding",
+      "label": "Inner padding",
+      "info": "Only applies to top and bottom.",
+      "min": 0,
+      "max": 100,
+      "default": 10,
+      "step": 5,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "outer_margin",
+      "label": "Outer margin",
+      "info": "Only applies to top and bottom.",
+      "min": 0,
+      "max": 100,
+      "default": 40,
+      "step": 5,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "🚨 Advanced"
+    },
+    {
+      "type": "liquid",
+      "id": "custom_css",
+      "label": "CSS"
+    },
+    {
+      "type": "liquid",
+      "id": "mobile_custom_css",
+      "label": "Mobile CSS",
+      "info": "Applied on screens less than 480px."
+    },
+    {
+      "type": "checkbox",
+      "id": "override_theme_font",
+      "label": "Override default theme font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Header",
+      "default": "serif"
+    },
+    {
+      "type": "font_picker",
+      "id": "main_font",
+      "label": "Text",
+      "default": "sans-serif"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Text - expandable 🎒"
+    }
+  ]
+}
+{% endschema %}
