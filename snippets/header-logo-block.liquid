@@ -52,6 +52,7 @@
         .logo--has-inverted is only applied to the default logo if the inverted logo exists. That way it'll only be hidden on the slider when it has a backup.
       {% endcomment %}
       <a
+        aria-label="Chamonix Logo. Link to Homepage"
         href="{{ routes.root_url }}"
         itemprop="url"
         class="site-header__logo-link{% if block.settings.logo-inverted %} logo--has-inverted{% endif %}"
